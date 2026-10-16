@@ -34,6 +34,7 @@ struct Params {
     float renderRadius    = 0.012f;   // world units
     float grabRadius      = 0.15f;
     float grabStiffness   = 400.0f;
+    float velocityDamping = 0.999f;
 };
 
 // Spacing of particles at rest relative to h. ~15 neighbours inside h in 2D.
@@ -223,7 +224,7 @@ void stepSim(Fluid& f, const Params& P, float aspect, float dt,
 
     #pragma omp parallel for schedule(static)
     for (int i = 0; i < n; ++i) {
-        glm::vec2 v = f.vel[i] + f.acc[i] * dt;
+        glm::vec2 v = (f.vel[i] + f.acc[i] * dt) * P.velocityDamping;
         float sp = glm::length(v);
         if (sp > maxSpeed) v *= maxSpeed / sp;
         glm::vec2 x = f.pos[i] + v * dt;
