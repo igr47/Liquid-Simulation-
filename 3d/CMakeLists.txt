@@ -12,6 +12,7 @@ set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/external/imgui)
 
 add_executable(${PROJECT_NAME}
     src/3d_liquid_sim.cpp
+    src/shader.cpp 
     external/glad_generated/glad/src/glad.c
 
     ${IMGUI_DIR}/imgui.cpp
@@ -22,6 +23,17 @@ add_executable(${PROJECT_NAME}
     # --- ImGui Backends for GLFW + OpenGL3 ---
     ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
     ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.vert
+    ${CMAKE_CURRENT_BINARY_DIR}/shader.vert
+    COPYONLY
+)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/shader.frag
+    ${CMAKE_CURRENT_BINARY_DIR}/shader.frag
+    COPYONLY
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
