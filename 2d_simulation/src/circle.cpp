@@ -104,6 +104,11 @@ void spawnFluid(Fluid& f, GrabState& g, const Params& P, float aspect) {
     f.rho.assign(n, P.restDensity);
     f.p.assign(n, 0.0f);
 
+    f.cellStart.resize(/*max cells*/ 0);  // will resize below
+    f.cellOf.resize(n);
+    f.sorted.resize(n);
+    f.cursor.resize(/*cells*/ 0);
+
     const float x0 = -aspect + 0.05f + s;
     const float y0 = -1.0f + 0.05f + s;
     for (int i = 0; i < n; ++i) {
@@ -121,9 +126,13 @@ void buildGrid(Fluid& f, float h, float aspect) {
     const int cells = f.gx * f.gy;
     const int n = f.count();
 
-    f.cellStart.assign(cells + 1, 0);
-    f.cellOf.resize(n);
-    f.sorted.resize(n);
+    //f.cellStart.assign(cells + 1, 0);
+    //f.cellOf.resize(n);
+    //f.sorted.resize(n);
+
+    if ((int)f.cellStart.size() != cells + 1) f.cellStart.resize(cells + 1);
+    std::fill(f.cellStart.begin(), f.cellStart.end(), 0);
+    // cellOf, sorted, cursor already sized
 
     for (int i = 0; i < n; ++i) {
         int cx = std::clamp((int)((f.pos[i].x + aspect) / h), 0, f.gx - 1);
